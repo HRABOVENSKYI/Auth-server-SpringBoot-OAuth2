@@ -3,7 +3,6 @@ package com.dailycodebuffer.oauthserver.service;
 import com.dailycodebuffer.oauthserver.entity.User;
 import com.dailycodebuffer.oauthserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,10 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null) {
-            throw  new UsernameNotFoundException("No User Found");
-        }
+        User user = userRepository.getByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No User Found"));
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
@@ -49,10 +45,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
-        List<GrantedAuthority>  authorities = new ArrayList<>();
-        for(String role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
         return authorities;
     }
 }

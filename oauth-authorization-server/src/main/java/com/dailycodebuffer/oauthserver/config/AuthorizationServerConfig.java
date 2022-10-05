@@ -33,13 +33,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthorizationServerConfig {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
         return http.formLogin(Customizer.withDefaults()).build();
     }
 
