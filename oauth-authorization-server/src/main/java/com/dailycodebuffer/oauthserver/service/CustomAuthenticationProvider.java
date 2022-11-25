@@ -1,7 +1,6 @@
 package com.dailycodebuffer.oauthserver.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,17 +21,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetails user= customUserDetailsService.loadUserByUsername(username);
-        return checkPassword(user,password);
+        UserDetails user = customUserDetailsService.loadUserByUsername(username);
+        return checkPassword(user, password);
     }
 
     private Authentication checkPassword(UserDetails user, String rawPassword) {
-        if(passwordEncoder.matches(rawPassword, user.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(user.getUsername(),
-                    user.getPassword(),
+        if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+            return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(),
                     user.getAuthorities());
-        }
-        else {
+        } else {
             throw new BadCredentialsException("Bad Credentials");
         }
     }
