@@ -26,9 +26,8 @@ public class HelloController {
     }
 
     @GetMapping("/users")
-    public String[] users(
-            @RegisteredOAuth2AuthorizedClient("api-client-authorization-code")
-                    OAuth2AuthorizedClient client) {
+    public String[] users(@RegisteredOAuth2AuthorizedClient("api-client-authorization-code")
+                                      OAuth2AuthorizedClient client) {
         return this.webClient
                 .get()
                 .uri("http://127.0.0.1:8090/api/users")
